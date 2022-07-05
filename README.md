@@ -1,5 +1,4 @@
-# Spotify Music Recommender.
-
+# Spotify Music Recommender
 
 ## Usage
 
@@ -9,7 +8,7 @@ Install the required libraries for this project by running the following in the 
 pip install requirements.txt
 ```
 
-This will install `kaggle` and `spotipy` as it is assumed standard python libraries such as `numpy`, `pandas`, `sklearn` etc. are already installed.
+This will only install `kaggle` and `spotipy` as it is assumed standard python libraries such as `numpy`, `pandas`, `sklearn` etc. are already installed.
 
 The data used in this project is from [this kaggle dataset](https://www.kaggle.com/datasets/zaheenhamidani/ultimate-spotify-tracks-db).
 
