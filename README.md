@@ -1,6 +1,6 @@
 # Spotify Music Recommender
 
-## Usage
+## Setup
 
 Install the required libraries for this project by running the following in the terminal:
 
@@ -28,3 +28,17 @@ After the keys are obtained, place the lines below in a file called `api_keys.py
 client_id = "your-client-id"
 client_secret = "your-client-secret"
 ```
+
+## Usage
+
+Place tracks (along with their artist) that you wish to find similar music to in the `input_tracklist.py` file.
+
+After having done that, run the following in the terminal to get a list of five recommended tracks:
+
+```bash
+python recommender.py
+```
+
+## Limitations
+
+The dataset has a limited set of genres and tracks. As a result, if you look for songs similar to e.g. some types of metal, you will get very strange recommendations. Might refactor if I find a more comprehensive dataset.

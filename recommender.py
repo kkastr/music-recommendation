@@ -55,7 +55,7 @@ def get_track_data(track: str, artist: str, sdf: pd.DataFrame) -> pd.DataFrame:
         return track_data
 
 
-def get_vectors(tdf: pd.DataFrame, sdf: pd.DataFrame):
+def get_vectors(tdf: pd.DataFrame, sdf: pd.DataFrame) -> pd.DataFrame:
     tmp = []
 
     for row in tdf.itertuples():
