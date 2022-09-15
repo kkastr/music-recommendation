@@ -1,2 +1,2 @@
-input_tracks = ["The Drug In Me Is Reimagined", "Your Betrayal"]
-input_artists = ["Falling In Reverse", "Bullet For My Valentine"]
+input_tracks = ["Fantasy", "Don't Fear The Reaper"]
+input_artists = ["Mariah Carey", "Blue Oyster Cult"]

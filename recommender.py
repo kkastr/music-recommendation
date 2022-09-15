@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import spotipy as sp
+from tabulate import tabulate
 from input_tracklist import input_tracks, input_artists
 from scipy.spatial.distance import cdist
 from api_keys import client_id, client_secret
@@ -45,14 +46,14 @@ def get_track_data(track: str, artist: str, sdf: pd.DataFrame) -> pd.DataFrame:
         track_data = sdf.query(query).select_dtypes(np.number).head(1)
 
         track_data["idx"] = track_data.index.values
-        return track_data
     else:
         result = search_for_track(track=track, artist=artist)
 
         track_data = result.select_dtypes(np.number)
 
         track_data["idx"] = np.nan
-        return track_data
+
+    return track_data
 
 
 def get_vectors(tdf: pd.DataFrame, sdf: pd.DataFrame) -> pd.DataFrame:
@@ -62,16 +63,13 @@ def get_vectors(tdf: pd.DataFrame, sdf: pd.DataFrame) -> pd.DataFrame:
         vector = get_track_data(row.track, row.artist, sdf)
         tmp.append(vector)
 
-    vdf = pd.concat(tmp, ignore_index=True)
-    vdf.drop(columns=["key", "time_signature", "mode"], inplace=True)
-    return vdf
+    return pd.concat(tmp, ignore_index=True)
 
 
 def get_recommendations(tdf: pd.DataFrame, sdf: pd.DataFrame, nrecs: int = 5) -> pd.DataFrame:
     track_vectors = get_vectors(tdf, sdf)
 
-    num_sdf = sdf.select_dtypes(np.number)
-
+    num_sdf = sdf.select_dtypes(include=np.number)
     scaler = StandardScaler()
     scaler.fit(num_sdf)
 
@@ -79,7 +77,8 @@ def get_recommendations(tdf: pd.DataFrame, sdf: pd.DataFrame, nrecs: int = 5) ->
         if not np.isnan(i):
             sdf.drop(index=i, inplace=True)
 
-    track_vectors.drop(columns="idx", inplace=True)
+    #  remove non-numeric columns
+    track_vectors.drop(columns=["idx", "key", "time_signature", "mode"], inplace=True)
 
     scaled_data = scaler.transform(num_sdf)
 
@@ -94,6 +93,13 @@ def get_recommendations(tdf: pd.DataFrame, sdf: pd.DataFrame, nrecs: int = 5) ->
     return sdf.iloc[rec_index]
 
 
+def display_recommendation(df, inputs):
+    print("Based on these songs:")
+    print(tabulate(inputs, headers='keys', tablefmt='psql'))
+    print("You might like:")
+    print(tabulate(df, headers='keys', tablefmt='psql', showindex=False))
+
+
 def main():
 
     df = pd.read_csv("spotify_dataset.csv")
@@ -104,7 +110,9 @@ def main():
 
     recommendation = get_recommendations(tdf=tdf, sdf=df)
 
-    print(recommendation[["track_name", "artist_name", "genre"]])
+    display_df = recommendation[["track_name", "artist_name", "genre"]]
+
+    display_recommendation(df=display_df, inputs=input_params)
 
 
 if __name__ == "__main__":
